@@ -65,9 +65,13 @@ int Program(void) {
 	// Problem1();
 
 	// Problem2();
-	
-	Problem3();
 
+	// Problem3();
+
+
+	/* Classes */
+
+	Classes1();
 
 	return 0;
 }
@@ -77,21 +81,53 @@ int Program(void) {
 #define LX 9
 #define LY 4
 
-int msg(char* str) {
+int msg(char* str) { // msg("log") is going to be used for quality of life when return msg("Program Terminated") instead of annoying { printf("...\n"); return 0;}
 
-	puts(str);
+	return puts(str);
+}
+
+
+/*
+
+This Solution works for Exercise #2 & #3 (Array displaying in reverse) =>> 'Vertically' and 'Horizontally' as a choice offered by prompting user.
+
+*/
+
+
+
+
+struct Person {
+
+	char name[40];
+	char gender;
+	int age;
+
+};
+
+
+int Classes1() {
+
+	struct Person people[3] = {
+		{"saz", 'M', 20},
+		{"toto", 'M', 20},
+		{"tata", 'F', 20}
+	};
+	
+	int i = 0, l = 3;
+
+	for (int i = 0; i < l ; i++) {
+		printf("%s %c %d \n", people[i].name, people[i].gender, people[i].age);
+	}
 
 	return 0;
 }
+
 
 int Problem1() {
 
 	int arr[LY][LX] = { 0 };
 
 	int i = 0, j = 0;
-
-	int* arrY;
-	int* arrX;
 
 	int lY = LY, lX = LX;
 
@@ -108,8 +144,6 @@ int Problem1() {
 
 	}
 	printf("\n");
-
-
 
 
 	int x, y;
@@ -139,7 +173,6 @@ int Problem2() {
 	int arr[LEN][LEN] = { 0 };
 
 	int inp;
-	int passed;
 	int hor;
 
 start:
@@ -154,21 +187,18 @@ start:
 	int i = 0, j = 0;
 	int l = inp * inp;
 
-	int* arrY;
-	int* arrX;
-
+	/*
+		We are here going to achieve this by mathematics, requiring one single loop instead of two.
+	*/
+	
 	for (i = 0; i < l; i++) {
-
 		int X = i % inp, Y = (int)i / inp;
-		int isVert = hor % 2;
-
-		int odd = Y % 2;
 		
-
-		if (X == 0) { printf("\n"); }
+		int isVert = hor % 2;
+		int odd = Y % 2;
 
 		int row = isVert ? Y : X, col = isVert ? X : Y;
-		
+
 		arr[row][col] = odd ? (Y * inp) + (inp - X) : (Y * inp) + X + 1;
 	}
 
@@ -190,132 +220,25 @@ start:
 int Problem3() {
 
 
-	char* str = "9202102011088";
+	char zodiac[12][20] = { "쥐", "소", "호랑이" , "토끼" , "용" , "뱀" , "말" , "양" , "원숭이" , "닭" , "개" , "돼지" };
 
+	char* gender;
+	int year;
+	
+	char str[13] = "9202102011088";
 
-	char* gender = (str[6] == "1") ? "Man" : "Woman";
+	
+	gender = (str[6] == "1" || str[6] == "3	") ? "Man" : "Woman";
 
-	printf("%s", gender);
-
-
-
-
-
-
-
-}
-
-#define STUDENTS 2
-#define COURSES 3
-
-int OtherGrades() {
-
-	char courses[COURSES][20] = { "Maths", "Python", "English" };
-	char names[STUDENTS][20] = { "Samuel", "Cheolsu" };
-
-	int grades[STUDENTS][COURSES] = { {10, 20 ,30}, {40, 50 ,60} };
-	int row = 0, col = 0, total = 0;
-	double av = 0;
-
-	printf("Grades Per Student : \n");
-	for (int j = 0; j < STUDENTS; j++) {
-		printf("%s : \t\t\t", names[j]);
-		total = 0;
-		for (int i = 0; i < COURSES; i++) {
-			total += grades[j][i];
-		}
-		av = total / COURSES;
-		printf("\Total %d", total);
-		printf("\t");
-		printf("\Average %1.2f", av);
-
-		printf("\n");
-	}
-
-	printf("\n");
-
-	printf("Grades Per Course : \n");
-	for (int j = 0; j < COURSES; j++) {
-		printf("%s : \t\t\t", courses[j]);
-		total = 0;
-		for (int i = 0; i < STUDENTS; i++) {
-			total += grades[i][j];
-		}
-		av = total / STUDENTS;
-		printf("\Total %d", total);
-		printf("\t");
-		printf("\Average %1.2f", av);
-
-		printf("\n");
-	}
-
-	printf("\n");
-	return 0;
+	printf("%s \n", gender);
 }
 
 
-/* MATRICES */
 
 
-#define ROWS 2
-#define COLS 3
-#define N 20
-
-int StudentsGrades() {
-
-	char name[N];
-	int row = 0, col = 0;
-	double av = 0;
 
 
-	int grades[ROWS][COLS];
-	int total = 0;
 
-	printf("Entering Student's name and grade");
-	printf("\n\n");
-
-
-	int results[COLS][ROWS] = { {0} };
-
-	for (int j = 0; j < ROWS; j++) {
-		printf("%d Name:", j + 1);
-		scanf_s("%s", name, sizeof(name));
-
-		for (int i = 0; i < COLS; i++) {
-			printf(" Subject %d : \t", i + 1);
-
-			scanf_s("%d", &grades[j][i]);
-			int res = grades[j][i];
-			results[i][j] = res;
-		}
-
-
-		printf("\n");
-
-		total = grades[j][0] + grades[j][1] + grades[j][2];
-		av = total / COLS;
-		printf("Student : %s , \t total %d \t average : %1.2f", name, total, av);
-
-
-		printf("\n\n");
-	}
-	printf("Subject Results : \n");
-
-	for (int i = 0; i < COLS; i++) {
-		total = av = 0;
-		for (int j = 0; j < ROWS; j++) {
-			int res = results[i][j];
-			total += res;
-			av = total / ROWS;
-		}
-		printf("Subject : %d , \t total %d \t average : %1.2f", i + 1, total, av);
-		printf("\n");
-	}
-
-	printf("\n\n");
-	return 0;
-
-}
 
 
 int main(void) {
