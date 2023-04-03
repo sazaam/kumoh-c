@@ -17,63 +17,46 @@
 
 /*
 
-Matrices => it's all about fine-tuning the logic behind the order of inputted data
+Structs => it's important to remember the nuances between references and pointers
 
-y & x (respectively row and columns data) coordinates
-and in what order WE need to loop in order to make our calculations,
-i-e in respect of what coordinate we want our data processed and displayed.
+in c, assigning a struct instance into a variable such as in :
+	struct Person p = people[i];
+	will hard copy people[i] into a new Person instance, 
+	which also means that writing onto this new datablock will never reach the actual people[i] instance.
 
+	for that 'pointing' the access via pointer is necessary, as in :
+	struct Person * p = &people[i];
+	which also means from now on accessing its properties will have to go through the arrow ('->prop') notation and no longer the point ('.prop') notation
 
-*** BONUS ***
-Strings in C are char arrays.
-so arrays of strings logically become arrays of arrays of chars.
+	in order to avoid that, we can always access people[i] by naming it explicitly.
 
-Similar order applies here as well,
-char[NUM_OF_STRINGS][LENGTH_OF_STRINGS] = {"str_1", "str_2"}
-
-
----- ALSO ------
-remember to assign array variables (dynamically) through scan_f() with the &myarr[y][x] pointer assignment.
-as in here :
-// scanf_s("%d", &grades[j][i]);
 
 */
 
 
 int Program(void) {
 
-	People1();
+	// People();
 	// Inventory();
-	// Coordinates();
+	Coordinates();
 	return 0;
 }
 
 
-#define LEN 10
-#define LX 9
-#define LY 4
-
-int msg(char* str) { // msg("log") is going to be used for quality of life when return msg("Program Terminated") instead of annoying { printf("...\n"); return 0;}
-
-	return puts(str);
-}
-
-
+int absolute(int a) { return a > 0 ? a : -a; }
 
 struct Coords {
 	int x, y;
 };
 
-
-int abs(int a) { return a > 0 ? a : -a; }
-
-
+#define COORDS 2
 int Coordinates() {
 
-
-	struct Coords coords[2] = {
+	struct Coords coords[COORDS] = {
 		{0, 0},{0,0}
 	};
+
+start:
 	printf("Please Input first set of Coordinates (X Y) :");
 	scanf_s("%d %d", &coords[0].x, &coords[0].y);
 	printf("\n");
@@ -82,10 +65,17 @@ int Coordinates() {
 	printf("\n");
 
 	struct Coords c1 = coords[0], c2 = coords[1];
-	struct Coords cDiff = { abs(c2.x - c1.x), abs(c2.y - c1.y)};
+	
+	if (c1.x | c1.y | c2.x | c2.y) {
+		struct Coords cDiff = { absolute(c2.x - c1.x), absolute(c2.y - c1.y) };
 
-	printf("The difference in X is %d , and in Y is %d", cDiff.x, cDiff.y);
+		printf("The difference in X is %d , and in Y is %d \n", cDiff.x, cDiff.y);
+		goto start;
+	}
 
+	puts("Program will terminate now.");
+
+	return 0;
 
 }
 
@@ -93,10 +83,7 @@ int Coordinates() {
 
 struct InventoryItem {
 	char name[40];
-	int quantity;
-	int price;
-	int total;
-
+	int quantity, price, total;
 };
 
 #define ITEMS 3
@@ -111,7 +98,7 @@ int Inventory() {
 	int i = 0, l = ITEMS;
 
 	printf("[%s \t\t%s \t%s \t%s ]\n", "Name", "Amount", "Price", "Total");
-	for (int i = 0; i < l; i++) {
+	for (i = 0; i < l; i++) {
 		struct InventoryItem item = items[i];
 		item.total = item.price * item.quantity;
 		printf("  %s \t%d \t%d \t%d \n", item.name, item.quantity, item.price, item.total);
@@ -128,11 +115,10 @@ struct Person {
 	double weight;
 	int age;
 	double bmi;
-
 };
 
 
-double cal_BMI(struct Person * p) {
+double cal_BMI(struct Person* p) {
 	double w = p->weight;
 	double ki = ((double)p->height * .01);
 	p->bmi = p->weight / (ki * ki);
@@ -140,7 +126,7 @@ double cal_BMI(struct Person * p) {
 }
 
 #define POPULATION 5
-int People1() {
+int People() {
 
 	struct Person ppl[POPULATION] = {
 		{"Jung", 175, 70.0},
@@ -157,8 +143,8 @@ int People1() {
 	int lightest = 0;
 	double w_ind = 500;
 
-	for (int i = 0; i < l; i++) {
-		struct Person *p = &ppl[i];
+	for (i = 0; i < l; i++) {
+		struct Person* p = &ppl[i];
 		int h = p->height;
 		double w = p->weight;
 		if (h > h_ind) {
@@ -172,22 +158,18 @@ int People1() {
 		cal_BMI(p);
 		printf("%s %d %1.1f \n", p->name, p->height, p->weight);
 	}
-
+	puts("");
 	printf("%s is the tallest person\n", ppl[tallest].name);
 	printf("%s is the lightest person\n", ppl[lightest].name);
-
+	puts("");
 
 	for (int i = 0; i < l; i++) {
-		struct Person *p = &ppl[i]; 
+		struct Person* p = &ppl[i];
 		printf("%s's BMI is %1.1f \n", p->name, p->bmi);
 	}
 
 	return 0;
 }
-
-
-
-
 
 
 
