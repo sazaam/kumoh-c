@@ -57,6 +57,7 @@ int strEx() {
 
 	return 0;
 }
+
 int Program(void) {
 
 
@@ -67,11 +68,6 @@ int Program(void) {
 	// Problem2();
 
 	// Problem3();
-
-
-	/* Classes */
-
-	Classes1();
 
 	return 0;
 }
@@ -103,25 +99,6 @@ struct Person {
 	int age;
 
 };
-
-
-int Classes1() {
-
-	struct Person people[3] = {
-		{"saz", 'M', 20},
-		{"toto", 'M', 20},
-		{"tata", 'F', 20}
-	};
-
-	int i = 0, l = 3;
-
-	for (int i = 0; i < l; i++) {
-		printf("%s %c %d \n", people[i].name, people[i].gender, people[i].age);
-	}
-
-	return 0;
-}
-
 
 int Problem1() {
 
