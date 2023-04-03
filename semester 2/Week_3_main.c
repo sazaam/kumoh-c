@@ -112,10 +112,10 @@ int Classes1() {
 		{"toto", 'M', 20},
 		{"tata", 'F', 20}
 	};
-	
+
 	int i = 0, l = 3;
 
-	for (int i = 0; i < l ; i++) {
+	for (int i = 0; i < l; i++) {
 		printf("%s %c %d \n", people[i].name, people[i].gender, people[i].age);
 	}
 
@@ -190,10 +190,10 @@ start:
 	/*
 		We are here going to achieve this by mathematics, requiring one single loop instead of two.
 	*/
-	
+
 	for (i = 0; i < l; i++) {
 		int X = i % inp, Y = (int)i / inp;
-		
+
 		int isVert = hor % 2;
 		int odd = Y % 2;
 
@@ -216,25 +216,6 @@ start:
 
 	return 0;
 }
-
-int Problem3() {
-
-
-	char zodiac[12][20] = { "쥐", "소", "호랑이" , "토끼" , "용" , "뱀" , "말" , "양" , "원숭이" , "닭" , "개" , "돼지" };
-
-	char* gender;
-	int year;
-	
-	char str[13] = "9202102011088";
-
-	
-	gender = (str[6] == "1" || str[6] == "3	") ? "Man" : "Woman";
-
-	printf("%s \n", gender);
-}
-
-
-
 
 
 
