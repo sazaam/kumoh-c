@@ -1,0 +1,199 @@
+
+/*
+
+@author :		sazaam@gmail.com
+@github :		https://www.github.com/sazaam/
+@description :	Week #5 Project 2 -- This project covers While Declarations
+
+@mission:		A Simple Recursive A and B Addition Calculation Example
+
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+/*
+
+Matrices => it's all about fine-tuning the logic behind the order of inputted data
+
+y & x (respectively row and columns data) coordinates
+and in what order WE need to loop in order to make our calculations,
+i-e in respect of what coordinate we want our data processed and displayed.
+
+
+*** BONUS ***
+Strings in C are char arrays.
+so arrays of strings logically become arrays of arrays of chars.
+
+Similar order applies here as well,
+char[NUM_OF_STRINGS][LENGTH_OF_STRINGS] = {"str_1", "str_2"}
+
+
+---- ALSO ------
+remember to assign array variables (dynamically) through scan_f() with the &myarr[y][x] pointer assignment.
+as in here :
+// scanf_s("%d", &grades[j][i]);
+
+*/
+
+
+int Program(void) {
+
+	People1();
+	// Inventory();
+	// Coordinates();
+	return 0;
+}
+
+
+#define LEN 10
+#define LX 9
+#define LY 4
+
+int msg(char* str) { // msg("log") is going to be used for quality of life when return msg("Program Terminated") instead of annoying { printf("...\n"); return 0;}
+
+	return puts(str);
+}
+
+
+
+struct Coords {
+	int x, y;
+};
+
+
+int abs(int a) { return a > 0 ? a : -a; }
+
+
+int Coordinates() {
+
+
+	struct Coords coords[2] = {
+		{0, 0},{0,0}
+	};
+	printf("Please Input first set of Coordinates (X Y) :");
+	scanf_s("%d %d", &coords[0].x, &coords[0].y);
+	printf("\n");
+	printf("Please Input second set of Coordinates (X Y) :");
+	scanf_s("%d %d", &coords[1].x, &coords[1].y);
+	printf("\n");
+
+	struct Coords c1 = coords[0], c2 = coords[1];
+	struct Coords cDiff = { abs(c2.x - c1.x), abs(c2.y - c1.y)};
+
+	printf("The difference in X is %d , and in Y is %d", cDiff.x, cDiff.y);
+
+
+}
+
+
+
+struct InventoryItem {
+	char name[40];
+	int quantity;
+	int price;
+	int total;
+
+};
+
+#define ITEMS 3
+int Inventory() {
+
+	struct InventoryItem items[ITEMS] = {
+		{"Computer", 8, 155},
+		{"Monitor", 6, 89},
+		{"Keyboard", 7, 23}
+	};
+
+	int i = 0, l = ITEMS;
+
+	printf("[%s \t\t%s \t%s \t%s ]\n", "Name", "Amount", "Price", "Total");
+	for (int i = 0; i < l; i++) {
+		struct InventoryItem item = items[i];
+		item.total = item.price * item.quantity;
+		printf("  %s \t%d \t%d \t%d \n", item.name, item.quantity, item.price, item.total);
+	}
+
+	return 0;
+}
+
+
+
+struct Person {
+	char name[40];
+	int height;
+	double weight;
+	int age;
+	double bmi;
+
+};
+
+
+double cal_BMI(struct Person * p) {
+	double w = p->weight;
+	double ki = ((double)p->height * .01);
+	p->bmi = p->weight / (ki * ki);
+	return p->bmi;
+}
+
+#define POPULATION 5
+int People1() {
+
+	struct Person ppl[POPULATION] = {
+		{"Jung", 175, 70.0},
+		{"Park", 165, 38.7},
+		{"Lee", 150, 60.0},
+		{"Shin", 150, 32.7},
+		{"Kim", 155, 28.9}
+	};
+
+	int i = 0, l = POPULATION;
+
+
+	int tallest = 0, h_ind = 0;
+	int lightest = 0;
+	double w_ind = 500;
+
+	for (int i = 0; i < l; i++) {
+		struct Person *p = &ppl[i];
+		int h = p->height;
+		double w = p->weight;
+		if (h > h_ind) {
+			tallest = i;
+			h_ind = h;
+		}
+		if (w < w_ind) {
+			lightest = i;
+			w_ind = w;
+		}
+		cal_BMI(p);
+		printf("%s %d %1.1f \n", p->name, p->height, p->weight);
+	}
+
+	printf("%s is the tallest person\n", ppl[tallest].name);
+	printf("%s is the lightest person\n", ppl[lightest].name);
+
+
+	for (int i = 0; i < l; i++) {
+		struct Person *p = &ppl[i]; 
+		printf("%s's BMI is %1.1f \n", p->name, p->bmi);
+	}
+
+	return 0;
+}
+
+
+
+
+
+
+
+int main(void) {
+	printf("Exercises Start !!! \n\n\n");
+	Program();
+
+	return 0;
+}
