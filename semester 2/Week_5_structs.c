@@ -21,7 +21,7 @@ Structs => it's important to remember the nuances between references and pointer
 
 in c, assigning a struct instance into a variable such as in :
 	struct Person p = people[i];
-	will hard copy people[i] into a new Person instance, 
+	will hard copy people[i] into a new Person instance,
 	which also means that writing onto this new datablock will never reach the actual people[i] instance.
 
 	for that 'pointing' the access via pointer is necessary, as in :
@@ -36,9 +36,9 @@ in c, assigning a struct instance into a variable such as in :
 
 int Program(void) {
 
-	// People();
+	People();
 	// Inventory();
-	Coordinates();
+	// Coordinates();
 	return 0;
 }
 
@@ -65,7 +65,7 @@ start:
 	printf("\n");
 
 	struct Coords c1 = coords[0], c2 = coords[1];
-	
+
 	if (c1.x | c1.y | c2.x | c2.y) {
 		struct Coords cDiff = { absolute(c2.x - c1.x), absolute(c2.y - c1.y) };
 
@@ -121,7 +121,16 @@ struct Person {
 double cal_BMI(struct Person* p) {
 	double w = p->weight;
 	double ki = ((double)p->height * .01);
-	p->bmi = p->weight / (ki * ki);
+	double bmi = p->bmi = p->weight / (ki * ki);
+
+	char* status = 
+		bmi > 30 ? "obese" : 
+		bmi > 25 ? "overweighted" : 
+		bmi > 20 ? "allegrate" : 
+		"slender";
+
+	printf("%s's BMI is %1.1f, you are %s. \n", p->name, p->bmi, status);
+	
 	return p->bmi;
 }
 
@@ -155,8 +164,8 @@ int People() {
 			lightest = i;
 			w_ind = w;
 		}
-		cal_BMI(p);
 		printf("%s %d %1.1f \n", p->name, p->height, p->weight);
+		
 	}
 	puts("");
 	printf("%s is the tallest person\n", ppl[tallest].name);
@@ -165,7 +174,9 @@ int People() {
 
 	for (int i = 0; i < l; i++) {
 		struct Person* p = &ppl[i];
-		printf("%s's BMI is %1.1f \n", p->name, p->bmi);
+		cal_BMI(p);
+		
+
 	}
 
 	return 0;
