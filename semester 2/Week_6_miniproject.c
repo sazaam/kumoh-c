@@ -17,62 +17,207 @@
 
 /*
 
-Define & enums
-Unions : Unions are just for easily store different types of data under one item i-e group different datas together
-
+Scheduler Minproject Example
+Writing/Reading Arrays of structs
 
 */
 
 
 int Program(void) {
-
 	MiniProject();
-
 	return 0;
 }
 
 
+
+
+
+////////////////////// CLASS DEFINITIONS
 typedef struct Event {
-	char name[60];
+	char name[100];
 	int day;
 	double start, duration;
-} Evt;
+};
 
 #define DAYS 7
 #define HOURS 24
 
 
-enum Actions {View=1, Add, Remove, Close};
+enum Actions { View = 1, Add, Remove, Close };
+static char DNAMES[7][4] = { "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN" };
+
+
+
+
+/////////////////////// HELPERS
+double hours2float(double t) {
+	int h = (int)t;
+	double m = t - h;
+	if (m == 0) return t;
+	else return (double) (h + m * 100 / 60);
+}
+double float2hours(double t) {
+	int h = (int)t;
+	double m = t - h;
+	if (m == 0) return t;
+	else return (double)(h + m * 60 / 100);
+}
+char* getDayName(int n) {
+	return DNAMES[n];
+}
+int getDayNum(char s[]) {
+	for (int i = 0; i < 7; i++) {
+		if (strcmp(DNAMES[i] , s)) return i;
+	}
+}
+int checkEventExists(struct Event* ev) {
+	return ev->duration > 0.0;
+}
+
+////////////////// ADDS
+void createEvent(struct Event* ev, char *name, int day, double time, double dur) {
+	strcpy(ev->name,name);
+	ev->day = day;
+	ev->start = time;
+	ev->duration = dur;
+}
+
+
+
+void addEvent(struct Event evs[], char* name, int day, double time, double dur) {
+
+	int n = (day*24) + (int) time;
+	int cond = 0;
+	struct Event* ev = &evs[n];
+	for (int i = 0; i < (int)dur; i++) {
+		ev = &evs[n + i];
+		cond |= checkEventExists(ev);
+	}
+
+	if (cond) {
+		puts("\tCannot create Event, as another Event is planned at that time...");
+		printf("\tPlease Remove event occurring %s at %1.2f...\n", DNAMES[ev->day], ev->start);
+		return;
+	}
+
+	for (int i = 0; i < (int) dur ; i++) {
+		createEvent(&evs[n+i], name, day, time, dur);
+	}
+
+}
+
+
+////////////////// REMOVES
+void clearEvent(struct Event* ev) {
+
+	strcpy(ev->name, "");
+	ev->day = 0;
+	ev->start = 0.0;
+	ev->duration = 0.0;
+
+}
+
+void removeEvent(struct Event evs[], int day, double time) {
+	int n = (day * 24) + (int) time;
+	int cond = 0;
+	struct Event* ev = &evs[n];
+	double dur = (int) ev->duration;
+
+	for (int i = 0; i < (int)dur; i++) {
+		ev = &evs[n + i];
+		cond |= checkEventExists(ev);
+	}
+	
+	if (!cond) {
+		puts("\tYour schedule is already free at that time...");
+		return;
+	}
+
+	printf("Removed Event : %s \n", ev->name);
+	for (int i = 0; i < (int)dur; i++) {
+		clearEvent(&evs[n+i]);
+	}
+	puts("");
+}
+
+////////////////// DISPLAYS
+void showEvent(struct Event* ev) {
+	printf("\t%s : Start Time : %1.2f , Duration : %1.2f\n", ev->name, ev->start, ev->duration);
+}
+
+void viewEvents(struct Event evs[], int total) {
+
+	puts("\t\t ~~ Weekly Events ~~\n");
+
+	struct Event* ev;
+	int day = -1;
+	double start = -1.0;
+	for (int i = 0; i < total; i++) {
+
+		ev = &evs[i];
+
+		if (ev->duration > 0) { // the event is printable
+
+			int daycond = (ev->day != day);
+			int diffcond = daycond || start != ev->start;
+
+			if (diffcond) {
+				if (daycond) printf("=> %s", DNAMES[ev->day]);
+				showEvent(ev);
+			}
+			start = ev->start;
+			day = ev->day;
+		};
+		
+	}
+}
+
+
+displayMenu() {
+	puts("--------------- Week Scheduler ----------------\n");
+
+	puts("  1 : View the Weeek's schedule.");
+	puts("  2 : Add an Event.");
+	puts("  3 : Remove an Event.");
+	puts("  4 : Terminate Program.");
+
+}
+
+addFixtures(struct Event evs[]) {
+
+	// Fixtures
+	addEvent(evs, "C Prog", 0, 13, 2);
+	addEvent(evs, "Sport", 1, 11, 2);
+	addEvent(evs, "Design Modelling", 2, 15, 2);
+	addEvent(evs, "English Practice", 3, 10, 2);
+	addEvent(evs, "Friends Meetings", 4, 18, 3);
+	addEvent(evs, "School Trip", 5, 11, 6);
+	addEvent(evs, "Bicycle", 6, 15, 2);
+}
 
 int MiniProject() {
 
-	struct Event Free = { "Free", 0, 0, 0 };
+	static struct Event weekEvts[168] = { 0 };
 
-	struct Evt * weekEvts[DAYS*HOURS] = { &Free };
+	//printf("fl2Hours :%1.2f \n", float2hours(1.5));
+	//printf("Hours2Fl :%1.2f \n", hours2float(1.3));
 
-	char DNAMES[7][4] = { "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN" };
 
-	//weekEvts[0] = &Free;
-	int l = sizeof(weekEvts) / sizeof(weekEvts[0]);
-	printf("size of Events %d", l);
-	
+	addFixtures(weekEvts);
 
 	/*
-	
-
-	week[0][6] = &ev;
+	printf("find Day 'Mon' %d : ", getDayNum("MON"));
+	printf("find Day 6 %s : ", getDayName(6));
 	*/
 
 start:
-	puts("--------------- Week Scheduler ----------------\n");
+	
+	displayMenu();
 
-	puts("1 : View the Weeek's schedule.");
-	puts("2 : Add an Event.");
-	puts("3 : Remove an Event.");
-	puts("4 : Terminate Program.");
 
 	int action = 0;
-	
+
+	puts("");
 	printf("Please Select Action :");
 	scanf_s("%d", &action);
 	puts("");
@@ -80,33 +225,13 @@ start:
 
 	switch (action) {
 	case View:
-		puts("View");
-		
-		for (int d = 0; d < DAYS; d++) {
-			printf("Day : %s\n", DNAMES[d]);
-			for (int h = 0; h < HOURS; h++) {
-				printf(" - %d", h);
-			}
-			printf("\n");
-		}
-
+		viewEvents(weekEvts, 168);
 		break;
 	case Add:
-		puts("Add");
-
-
-		int day = 0;
-		int start = 13;
-		int duration = 2;
-		struct Event saz = { "C Prog", 0, 13, 2 };
-		for (int i = 0; i < duration; i++) {
-			weekEvts[(day + 1) * (start + i)] = &saz;
-		}
-		
-
+		addEvent(weekEvts, "A new One", 0, 17, 2);
 		break;
 	case Remove:
-		puts("Remove");
+		removeEvent(weekEvts, 0, 13);
 		break;
 	case Close:
 		puts("Program will terminate now.");
@@ -122,7 +247,7 @@ start:
 
 
 int main(void) {
-	printf("Exercises Start !!! \n\n\n");
+	printf("MiniProject Starts !!! \n\n\n");
 	Program();
 
 	return 0;
