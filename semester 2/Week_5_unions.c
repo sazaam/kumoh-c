@@ -30,7 +30,7 @@ int Program(void) {
 	//EnumExample();
 
 	//UnionExample();
-	
+
 	UnionDemo();
 
 
@@ -55,7 +55,7 @@ union Student {
 };
 
 
-enum majors {IT, Medic, Arch, Lang, Soc, Math, Phys, Bio, Gen};
+enum majors { IT, Medic, Arch, Lang, Soc, Math, Phys, Bio, Gen };
 
 
 int UnionExample() {
@@ -82,6 +82,7 @@ union Mate {
 	char surname[20], gender;
 };
 
+
 int UnionDemo() {
 
 
@@ -101,30 +102,30 @@ int UnionDemo() {
 	union Mate p;
 	p.gender = 'G';
 	strcpy(p.surname, "KIM");
-	
+
 	printf("%c\n", p.gender);
 	puts(p.surname);
-	
+
 	//  Overwrites if similar types Strings or char are stored
 
 
 	/// Example 3
-	#define MONTHS 12
-	enum mnames{JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
-	char* months[MONTHS] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+#define MONTHS 12
+	enum mnames { JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC };
+	char* months[MONTHS] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
 	int m;
-	
+
 start:
 	printf("Please enter a month number: \n");
 	scanf_s("%d", &m);
-	
-	if (m < 1 || m > MONTHS) {
+
+	if (m <= JAN || m > DEC + 1) {
 		printf("Please enter again. \n");
 		goto start;
 	}
-	
-	printf("The month you chose is %s\n", months[m-1]);
+
+	printf("The month you chose is %s\n", months[m - 1]);
 
 
 
@@ -138,8 +139,8 @@ start:
 
 int EnumExample() {
 
-	typedef enum week {SUN, MON, TUE, WED, THU, FRI, SAT};
-	typedef enum familyname {KIM=100, LEE, PARK, JUNG, HONG, JANG, CHOI, SONG, HWANG, OH, GONG, KANG, SEO} Fname;
+	typedef enum week { SUN, MON, TUE, WED, THU, FRI, SAT };
+	typedef enum familyname { KIM = 100, LEE, PARK, JUNG, HONG, JANG, CHOI, SONG, HWANG, OH, GONG, KANG, SEO } Fname;
 
 	Fname n = JUNG;
 
