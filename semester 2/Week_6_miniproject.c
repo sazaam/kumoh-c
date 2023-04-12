@@ -54,7 +54,7 @@ double hours2float(double t) {
 	int h = (int)t;
 	double m = t - h;
 	if (m == 0) return t;
-	else return (double) (h + m * 100 / 60);
+	else return (double)(h + m * 100 / 60);
 }
 double float2hours(double t) {
 	int h = (int)t;
@@ -67,7 +67,7 @@ char* getDayName(int n) {
 }
 int getDayNum(char s[]) {
 	for (int i = 0; i < 7; i++) {
-		if (strcmp(DNAMES[i] , s)) return i;
+		if (strcmp(DNAMES[i], s) == 0) return i;
 	}
 }
 int checkEventExists(struct Event* ev) {
@@ -75,8 +75,8 @@ int checkEventExists(struct Event* ev) {
 }
 
 ////////////////// ADDS
-void createEvent(struct Event* ev, char *name, int day, double time, double dur) {
-	strcpy(ev->name,name);
+void createEvent(struct Event* ev, char* name, int day, double time, double dur) {
+	strcpy(ev->name, name);
 	ev->day = day;
 	ev->start = time;
 	ev->duration = dur;
@@ -86,7 +86,7 @@ void createEvent(struct Event* ev, char *name, int day, double time, double dur)
 
 void addEvent(struct Event evs[], char* name, int day, double time, double dur) {
 
-	int n = (day*24) + (int) time;
+	int n = (day * 24) + (int)time;
 	int cond = 0;
 	struct Event* ev = &evs[n];
 	for (int i = 0; i < (int)dur; i++) {
@@ -100,10 +100,10 @@ void addEvent(struct Event evs[], char* name, int day, double time, double dur) 
 		return;
 	}
 
-	for (int i = 0; i < (int) dur ; i++) {
-		createEvent(&evs[n+i], name, day, time, dur);
+	for (int i = 0; i < (int)dur; i++) {
+		createEvent(&evs[n + i], name, day, time, dur);
 	}
-
+	
 }
 
 
@@ -118,24 +118,24 @@ void clearEvent(struct Event* ev) {
 }
 
 void removeEvent(struct Event evs[], int day, double time) {
-	int n = (day * 24) + (int) time;
+	int n = (day * 24) + (int)time;
 	int cond = 0;
 	struct Event* ev = &evs[n];
-	double dur = (int) ev->duration;
+	double dur = (int)ev->duration;
 
 	for (int i = 0; i < (int)dur; i++) {
 		ev = &evs[n + i];
 		cond |= checkEventExists(ev);
 	}
-	
+
 	if (!cond) {
 		puts("\tYour schedule is already free at that time...");
 		return;
 	}
 
-	printf("Removed Event : %s \n", ev->name);
+	printf("Successfully Removed Event : %s \n", ev->name);
 	for (int i = 0; i < (int)dur; i++) {
-		clearEvent(&evs[n+i]);
+		clearEvent(&evs[n + i]);
 	}
 	puts("");
 }
@@ -145,9 +145,9 @@ void showEvent(struct Event* ev) {
 	printf("\t%s : Start Time : %1.2f , Duration : %1.2f\n", ev->name, ev->start, ev->duration);
 }
 
-void viewEvents(struct Event evs[], int total) {
+void viewEvents(struct Event evs[], int total, int focusday) {
 
-	puts("\t\t ~~ Weekly Events ~~\n");
+	if(focusday == -10) puts("\t\t ~~ Weekly Events ~~\n");
 
 	struct Event* ev;
 	int day = -1;
@@ -162,18 +162,25 @@ void viewEvents(struct Event evs[], int total) {
 			int diffcond = daycond || start != ev->start;
 
 			if (diffcond) {
-				if (daycond) printf("=> %s", DNAMES[ev->day]);
-				showEvent(ev);
+				if (daycond) {
+					if (focusday != -10) {
+						if (day == focusday) printf("=> %s", DNAMES[ev->day]);
+					}else printf("=> %s", DNAMES[ev->day]);
+				}
+				if (focusday != -10) {
+					if(day == focusday) showEvent(ev);
+				}else showEvent(ev);
 			}
 			start = ev->start;
 			day = ev->day;
 		};
-		
+
 	}
 }
 
 
 displayMenu() {
+
 	puts("--------------- Week Scheduler ----------------\n");
 
 	puts("  1 : View the Weeek's schedule.");
@@ -205,13 +212,13 @@ int MiniProject() {
 
 	addFixtures(weekEvts);
 
-	/*
-	printf("find Day 'Mon' %d : ", getDayNum("MON"));
-	printf("find Day 6 %s : ", getDayName(6));
-	*/
+	
+	//printf("find Day 'Mon' %d : ", getDayNum("MON"));
+	//printf("find Day 6 %s : ", getDayName(6));
+	
 
 start:
-	
+
 	displayMenu();
 
 
@@ -222,16 +229,56 @@ start:
 	scanf_s("%d", &action);
 	puts("");
 
-
+	
+	
+	char evname[100] = "Repair Bicycle", evday[4] = "MON";
+	int evstart = 17, evdur = 2;
+	
+	
 	switch (action) {
 	case View:
-		viewEvents(weekEvts, 168);
+		viewEvents(weekEvts, 168, -10);
 		break;
 	case Add:
-		addEvent(weekEvts, "A new One", 0, 17, 2);
+
+		//printf("Please inform Event's Name :");
+		//scanf_s(" %s", &evname, 100); // TRIMMING SPACE SCAN_F ISSUE -> # HACK // THIS WAS NOT SO COOL
+		//while (getchar() != '\n');
+
+		printf("Please inform Event's Name : ");
+		scanf(" %100[0-9a-zA-Z ]", &evname); // In Order to have Spaces allowed in string
+
+		while (getchar() != '\n');
+
+		printf("Please inform day, start and end time: ");
+		scanf(" %s %d %d", &evday, &evstart, &evdur);
+
+		/*
+		printf("Please inform name, day, start and end time:");
+		scanf("%s %s %d %d",&evname, &evday,  &evstart, &evdur);
+		*/
+
+
+		addEvent(weekEvts, evname, getDayNum(evday), evstart, evdur);
+		
 		break;
 	case Remove:
-		removeEvent(weekEvts, 0, 13);
+
+		
+		printf("Please Select Event's Day (MON-SUN): ");
+		scanf(" %s", &evday);
+
+		/**/
+
+		puts("");
+		viewEvents(weekEvts, 168, getDayNum(evday) -1);
+		puts("");
+
+		printf("Please Select Event's Start Time to remove it (-1 to cancel): ");
+		scanf(" %d", &evstart);
+
+		if(evstart != -1) removeEvent(weekEvts, getDayNum(evday), evstart);
+
 		break;
 	case Close:
 		puts("Program will terminate now.");
