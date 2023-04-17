@@ -3,10 +3,9 @@
 
 @author :		sazaam@gmail.com
 @github :		https://www.github.com/sazaam/
-@description :	Week #5 Project 2 -- This project covers While Declarations
+@description :	Week #6 MiniProject >> This project covers Arrays of struct Type Declarations
 
-@mission:		A Simple Recursive A and B Addition Calculation Example
-
+@mission:		A Simple Scheduler
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -17,8 +16,31 @@
 
 /*
 
-Scheduler Minproject Example
+Scheduler Miniproject Example
 Writing/Reading Arrays of structs
+
+
+
+In this project I made several choices, in order to have a smart application use :
+	- for clarity reasons, i store event duration instead of event finish_time (meaning duration = 2 hours instead of end time = 17h)
+	- other upgrades all concern the following possibilities :
+		- having events at any hour of the day,
+		- having events crossing from one day to the next,
+		- having multiple events for the same day,
+		- making the checking of already existing events when writing/deleting  
+		- thus, having as many events as all hours included in a week (full schedule), but with safety of no inter-crossings.
+
+I thought ahead and directly implemented Hours as floats in order to have events at potentially each quarter of hours (like 15:30), 
+but that would have complexified the code a lot and make the array enormous, if following the already-applied logic.
+Practically, that could be still be achieved in a smarter way in the future version of the project.
+
+Synopsis of this Program's interface : 
+- Entering Array of Events could be easily implemented (apply multiple events at once such as the 'addFixtures' function) within a loop;
+- Entering a new Event checks if an other event shares similar time-frame and rejects the saving, encouraging to use a delete event instead;
+- Clearing an event requires to be existing in the first place, and is made in an user-friendly attempt :
+	- First asks for the day of the event (to filter and display a reminder list),
+	- Then offers to delete Event by Start time (instead of name, or multiple necessary indications).
+
 
 */
 
