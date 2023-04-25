@@ -89,7 +89,7 @@ void addProduct(struct InventoryItem products[], char* name, double price, doubl
 			break;
 		}
 	}
-	
+	printf("Successfully Added Product : %s \n", name);
 
 }
 
@@ -105,16 +105,18 @@ void clearProduct(struct InventoryItem* item) {
 
 void deleteProduct(struct InventoryItem products[], char * name) {
 	
-	int i = 0, l = ITEMS;
+	int i = 0, l = ITEMS, found = 0;
 	struct InventoryItem item;
 	for (i = 0; i < l; i++) {
 		item = products[i];
 		if (strcmp(item.name, name) == 0) {
 			clearProduct(&products[i]);
+			found = 1;
 			break;
 		}
 	}
-	printf("Successfully Removed Event : %s \n", item.name);
+	if(found) printf("Successfully Removed Product : %s \n", item.name);
+	else printf("No Product found by the name : %s \n", item.name);
 	puts("");
 }
 
@@ -124,17 +126,19 @@ void updateProduct(struct InventoryItem* item, double discount) {
 }
 void modifyProduct(struct InventoryItem products[], char* name, double discount) {
 
-	int i = 0, l = ITEMS;
+	int i = 0, l = ITEMS, found = 0;
 	struct InventoryItem item;
 	for (i = 0; i < l; i++) {
 		item = products[i];
 		printf("COMPARING %s %s %d", name, item.name, strcmp(item.name, name) == 0);
 		if (strcmp(item.name, name) == 0) {
 			updateProduct(&products[i], discount);
+			found = 1;
 			break;
 		}
 	}
-	printf("Successfully Updated Event Discount: %s \n", item.name);
+	if(found) printf("Successfully Updated Product Discount: %s \n", item.name);
+	else printf("No Product found by the name : %s \n", item.name);
 	puts("");
 }
 
